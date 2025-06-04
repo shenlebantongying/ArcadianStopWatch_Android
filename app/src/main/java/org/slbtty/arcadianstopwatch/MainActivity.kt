@@ -29,7 +29,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        var timeTrack = TimeTrack()
+
+        val sharedPreferences = this.getPreferences(MODE_PRIVATE)
+
+        var timeTrack = TimeTrack(sharedPreferences)
+
         setContent {
             ArcadianStopWatchTheme {
                 Box(
@@ -56,6 +60,8 @@ fun Greeting(timeTrack: TimeTrack, modifier: Modifier = Modifier) {
     var durationStr by remember { mutableStateOf("") }
     var paused by remember { mutableStateOf(false) }
 
+    paused = timeTrack.paused;
+    
     fun updateTrackingStr() {
         timeTrack.updateStopInstant()
         durationStr = timeTrack.getTimeString()
@@ -71,7 +77,7 @@ fun Greeting(timeTrack: TimeTrack, modifier: Modifier = Modifier) {
         )
         Button(
             onClick = {
-                timeTrack.reset()
+                timeTrack.statesReset()
                 paused = false
             }) {
             Text(
