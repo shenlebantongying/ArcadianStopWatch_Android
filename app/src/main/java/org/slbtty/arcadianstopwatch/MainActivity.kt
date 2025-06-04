@@ -25,14 +25,12 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
-        val sharedPreferences = this.getPreferences(MODE_PRIVATE)
-
-        var timeTrack = TimeTrack(sharedPreferences)
+        var timeTrack = TimeTrack(this.getPreferences(MODE_PRIVATE))
 
         setContent {
             ArcadianStopWatchTheme {
@@ -60,8 +58,8 @@ fun Greeting(timeTrack: TimeTrack, modifier: Modifier = Modifier) {
     var durationStr by remember { mutableStateOf("") }
     var paused by remember { mutableStateOf(false) }
 
-    paused = timeTrack.paused;
-    
+    paused = timeTrack.paused
+
     fun updateTrackingStr() {
         timeTrack.updateStopInstant()
         durationStr = timeTrack.getTimeString()
@@ -73,7 +71,9 @@ fun Greeting(timeTrack: TimeTrack, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Text(
-            text = durationStr, color = MaterialTheme.colorScheme.onBackground
+            text = durationStr,
+            color = if (paused) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
+
         )
         Button(
             onClick = {
@@ -92,7 +92,7 @@ fun Greeting(timeTrack: TimeTrack, modifier: Modifier = Modifier) {
 
             }) {
             Text(
-                text = if (paused) "Unpause" else "Pause"
+                text = if (paused) "Unpause" else "Pause",
             )
         }
 

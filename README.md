@@ -20,3 +20,4 @@ https://developer.android.com/reference/java/time/Instant#time-scale
 
 [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html)
 
+The icon is modified from [material-design-icons](https://github.com/google/material-design-icons) which is Apache-2.0.
