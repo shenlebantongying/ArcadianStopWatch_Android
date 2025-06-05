@@ -4,7 +4,7 @@ Operations:
 
 * Tap ⟶ Pause/Unpause
 * Long Press ⟶ Reset
-* Double Tap Blanks ⟶ Change Orientation
+* Double Tap Blank ⟶ Change Orientation
 
 |                                                                                                                   |                                                                                                                   |                                                                                                                   |
 |-------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
@@ -16,7 +16,7 @@ Operations:
 | <kbd> <img height=100 src="https://github.com/user-attachments/assets/aef4d8d1-97ba-42a6-bc78-59ff65c9b97f"></kbd> |
 | <kbd> <img height=100 src="https://github.com/user-attachments/assets/d2aa7241-6002-4286-9900-a962900ca967"></kbd> |
 
-Similar alternatives:
+Similar Programs:
 
 * Linux - [mStopWatch](https://github.com/shenlebantongying/mStopWatch_Linux)
 * macOS - [MenuStopWatch](https://github.com/shenlebantongying/MenuStopWatch_macOS)

@@ -27,7 +27,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.keepScreenOn
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalView
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
@@ -52,8 +54,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Layering(timeTrack: TimeTrack) {
-    val orientation = LocalConfiguration.current.orientation
+    val localConfiguration = LocalConfiguration.current
     val localActivity = LocalActivity.current
+    val localeView = LocalView.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -61,19 +64,27 @@ fun Layering(timeTrack: TimeTrack) {
             .background(MaterialTheme.colorScheme.surface)
             .safeContentPadding()
             .fillMaxSize()
+            .keepScreenOn()
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onDoubleTap = {
-                        localActivity?.requestedOrientation = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                        } else {
-                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                        }
+                    onDoubleTap = { offset ->
+                        localActivity?.requestedOrientation =
+                            if (localConfiguration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                val turnLeft: Boolean = offset.x < (localeView.width / 2)
+                                if (turnLeft) {
+                                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                                } else {
+                                    ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+                                }
+
+                            } else {
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            }
 
                     })
             },
     ) {
-        Greeting(
+        TheText(
             timeTrack = timeTrack
         )
     }
@@ -81,7 +92,7 @@ fun Layering(timeTrack: TimeTrack) {
 
 
 @Composable
-fun Greeting(timeTrack: TimeTrack) {
+fun TheText(timeTrack: TimeTrack) {
 
     var durationStr by remember { mutableStateOf(timeTrack.getTimeString()) }
     var paused by remember { mutableStateOf(false) }
@@ -96,7 +107,7 @@ fun Greeting(timeTrack: TimeTrack) {
     Text(
         text = durationStr,
         color = if (paused) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
-        autoSize = TextAutoSize.StepBased(maxFontSize = TextAutoSizeDefaults.MaxFontSize * 1.5),
+        autoSize = TextAutoSize.StepBased(maxFontSize = TextAutoSizeDefaults.MaxFontSize * 1.4),
         maxLines = 1,
         modifier = Modifier.combinedClickable(
             onClick = {
