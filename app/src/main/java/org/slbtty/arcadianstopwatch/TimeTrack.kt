@@ -1,11 +1,10 @@
 package org.slbtty.arcadianstopwatch
 
 
-import java.time.Duration
-import java.time.Instant
-
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import java.time.Duration
+import java.time.Instant
 
 class TimeTrack(val sharedPreferences: SharedPreferences) {
 
@@ -39,21 +38,25 @@ class TimeTrack(val sharedPreferences: SharedPreferences) {
         }
     }
 
+
     fun statesRecover() {
         paused = sharedPreferences.getBoolean(::paused.name, false)
 
         val strStartInstant: String? = sharedPreferences.getString(::startInstant.name, "")
-        val strPausedInstant: String? = sharedPreferences.getString(::pausedInstant.name, "")
         val strTickingInstant: String? = sharedPreferences.getString(::tickingInstant.name, "")
+
+        val strPausedInstant: String? = sharedPreferences.getString(::pausedInstant.name, "")
         val strCumulativePausedDuration: String? = sharedPreferences.getString(::cumulativePauseDuration.name, "")
 
-        if (strStartInstant.isNullOrEmpty() || strPausedInstant.isNullOrEmpty() || strCumulativePausedDuration.isNullOrEmpty() || strTickingInstant.isNullOrEmpty()) {
+        if ((strStartInstant.isNullOrEmpty() || strCumulativePausedDuration.isNullOrEmpty() || strTickingInstant.isNullOrEmpty()) || (paused && strPausedInstant.isNullOrEmpty())) {
             statesReset()
         } else {
             startInstant = Instant.parse(strStartInstant)
-            pausedInstant = Instant.parse(strPausedInstant)
             tickingInstant = Instant.parse(strTickingInstant)
             cumulativePauseDuration = Duration.parse(strCumulativePausedDuration)
+            if (paused) {
+                pausedInstant = Instant.parse(strPausedInstant)
+            }
         }
     }
 

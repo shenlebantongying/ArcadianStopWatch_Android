@@ -5,12 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.foundation.text.TextAutoSizeDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,41 +22,45 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var timeTrack: TimeTrack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        var timeTrack = TimeTrack(this.getPreferences(MODE_PRIVATE))
+        val preference = this.getPreferences(MODE_PRIVATE)
+        timeTrack = TimeTrack(preference)
 
         setContent {
             ArcadianStopWatchTheme {
-                Box(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                Column(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .safeContentPadding()
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Greeting(
-                        timeTrack = timeTrack, modifier = Modifier
-                            .fillMaxSize()
-                            .wrapContentSize(Alignment.Center)
+                        timeTrack = timeTrack
                     )
                 }
 
             }
         }
-
     }
-
 
 }
 
-@Composable
-fun Greeting(timeTrack: TimeTrack, modifier: Modifier = Modifier) {
 
-    var durationStr by remember { mutableStateOf("") }
+@Composable
+fun Greeting(timeTrack: TimeTrack) {
+
+    var durationStr by remember { mutableStateOf(timeTrack.getTimeString()) }
     var paused by remember { mutableStateOf(false) }
 
     paused = timeTrack.paused
@@ -65,46 +70,31 @@ fun Greeting(timeTrack: TimeTrack, modifier: Modifier = Modifier) {
         durationStr = timeTrack.getTimeString()
     }
 
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Text(
-            text = durationStr,
-            color = if (paused) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
-
-        )
-        Button(
-            onClick = {
-                timeTrack.statesReset()
-                paused = false
-            }) {
-            Text(
-                text = "Reset"
+    Text(
+        text = durationStr,
+        color = if (paused) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground,
+        autoSize = TextAutoSize.StepBased(maxFontSize = TextAutoSizeDefaults.MaxFontSize * 1.5),
+        maxLines = 1,
+        modifier = Modifier
+            .combinedClickable(
+                onClick = {
+                    timeTrack.togglePauseUnpause()
+                    paused = !paused
+                },
+                onLongClick = {
+                    timeTrack.statesReset()
+                    paused = false
+                },
             )
-        }
 
-        Button(
-            onClick = {
-                timeTrack.togglePauseUnpause()
-                paused = !paused
+    )
 
-            }) {
-            Text(
-                text = if (paused) "Unpause" else "Pause",
-            )
-        }
-
-        LaunchedEffect(true) {
-            while (true) {
-                updateTrackingStr()
-                delay(1000)
-            }
-
+    LaunchedEffect(true) {
+        while (true) {
+            updateTrackingStr()
+            delay(1000)
         }
 
     }
-
-
 }
+

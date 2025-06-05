@@ -10,10 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ArcadianStopWatch">
-        <!-- android:configChanges is needed for theme swiching and keep states-->
         <activity
             android:name=".MainActivity"
-            android:configChanges="uiMode"
             android:exported="true"
             android:theme="@style/Theme.ArcadianStopWatch">
             <intent-filter>

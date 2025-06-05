@@ -2,21 +2,11 @@ package org.slbtty.arcadianstopwatch
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
 
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontSize = 84.sp,
-    ), labelLarge = TextStyle(
-        fontSize = 36.sp,
-    )
-)
 
 @Composable
 fun ArcadianStopWatchTheme(
@@ -30,6 +20,6 @@ fun ArcadianStopWatchTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme, typography = Typography, content = content
+        colorScheme = colorScheme, content = content
     )
 }
